@@ -2,7 +2,7 @@
 
 This project demonstrates a modern, accessible, and type-safe user search experience using React Router v7, TypeScript, and Tailwind CSS.
 
-## Project Criteria (Translated from Swedish)
+## Project Criteria
 
 - In a new Next.js 15 / React Router 7 project, create a route with a search field centered on the page. The value in this search field should be synced with a query parameter called `q`.
 - As a side effect of the `q` value changing, a fetch call should be made to any endpoint, and the response should be logged to the console.
@@ -28,6 +28,7 @@ Originally, I considered implementing debouncing entirely on the client side usi
 Instead, inspired by [this excellent article by ProgrammingAreHard](https://programmingarehard.com/2025/02/24/debouncing-in-react-router-v7.html/), I leveraged React Router's `clientLoader` and `loader` functions. This approach allows debouncing to be handled at the routing layer, keeping UI components clean and focused on rendering.
 
 **How it works:**
+
 - The `clientLoader` intercepts navigation requests and uses an abortable timeout to debounce them.
 - Only after the debounce period (and if the request hasn't been cancelled) does it call the server `loader`.
 - This prevents unnecessary backend load and avoids race conditions, all without extra hooks in the UI.
@@ -53,5 +54,3 @@ Instead, inspired by [this excellent article by ProgrammingAreHard](https://prog
    pnpm run dev
    ```
 3. Visit the app in your browser and try searching for users!
-
-```
