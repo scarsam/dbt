@@ -1,87 +1,57 @@
-# Welcome to React Router!
+# DBT Capital - Hybrid User Search
 
-A modern, production-ready template for building full-stack React applications using React Router.
+This project demonstrates a modern, accessible, and type-safe user search experience using React Router v7, TypeScript, and Tailwind CSS.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Project Criteria (Translated from Swedish)
+
+- In a new Next.js 15 / React Router 7 project, create a route with a search field centered on the page. The value in this search field should be synced with a query parameter called `q`.
+- As a side effect of the `q` value changing, a fetch call should be made to any endpoint, and the response should be logged to the console.
+- The value from `q` should be present in the search field at hydration/first paint.
+- The value from the search field should update the address bar as the user types.
+- Ensure a good user experience.
+- Ensure the number of requests to the endpoint is kept to a minimum.
+- The code should be as type-safe as possible.
+- BONUS: Ability to abort ongoing fetch calls if needed.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- **User search with debounced backend requests**
+- **Type-safe validation with Zod**
+- **Accessible, animated UI**
+- **Robust error and loading states**
+- **Clean, maintainable codebase**
+
+## Debouncing with React Router Loaders
+
+Originally, I considered implementing debouncing entirely on the client side using a custom React hook and `useEffect`. While this approach works, it introduces extra hooks and state management, cluttering the component logic.
+
+Instead, inspired by [this excellent article by ProgrammingAreHard](https://programmingarehard.com/2025/02/24/debouncing-in-react-router-v7.html/), I leveraged React Router's `clientLoader` and `loader` functions. This approach allows debouncing to be handled at the routing layer, keeping UI components clean and focused on rendering.
+
+**How it works:**
+- The `clientLoader` intercepts navigation requests and uses an abortable timeout to debounce them.
+- Only after the debounce period (and if the request hasn't been cancelled) does it call the server `loader`.
+- This prevents unnecessary backend load and avoids race conditions, all without extra hooks in the UI.
+
+## Why This Approach?
+
+- **Cleaner UI code:** No need for extra hooks or `useEffect` for debouncing.
+- **Resource efficiency:** Prevents sending unnecessary requests to the backend.
+- **Modern React Router patterns:** Makes full use of v7's advanced features.
+
+## Credits
+
+- Debouncing technique adapted from [Debouncing in React Router v7](https://programmingarehard.com/2025/02/24/debouncing-in-react-router-v7.html/) by ProgrammingAreHard.
 
 ## Getting Started
 
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+1. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+2. Start the development server:
+   ```bash
+   pnpm run dev
+   ```
+3. Visit the app in your browser and try searching for users!
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
