@@ -9,6 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { motion } from "motion/react";
+import dbtLogo from "~/assets/dbt-capital.svg";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,13 +31,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          rel="shortcut icon"
+          href="https://www.dbt.se/hubfs/DBT_Fav%20160x160.png"
+        ></link>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="flex flex-col h-full min-h-screen max-w-2xl m-auto dark py-4 px-2">
         {children}
         <ScrollRestoration />
         <Scripts />
+        <motion.p
+          className="flex flex-col items-center  text-xs"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <img
+            src={dbtLogo}
+            className="invert max-w-24 mb-1"
+            alt="DBT Capital Logo"
+          />
+          Made with 💚 by Sam Ojling
+        </motion.p>
       </body>
     </html>
   );
