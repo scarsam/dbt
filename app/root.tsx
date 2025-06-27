@@ -38,12 +38,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="flex flex-col h-full min-h-screen max-w-2xl m-auto dark py-4 px-2">
-        {children}
+      <body className="flex flex-col min-h-screen max-w-2xl m-auto dark py-4 px-2">
+        <div className="flex-1 flex flex-col justify-center items-center relative pb-40">
+          {children}
+        </div>
         <ScrollRestoration />
         <Scripts />
         <motion.p
-          className="flex flex-col items-center  text-xs"
+          className="flex flex-col items-center text-xs mt-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}

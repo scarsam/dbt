@@ -65,94 +65,95 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     }
   }, [loaderData]);
 
+  const hasStatus =
+    (!isLoading && query && loaderData?.users?.length === 0) ||
+    isLoading ||
+    (!isLoading && loaderData?.error);
+  const hasResults =
+    !isLoading && loaderData?.users && loaderData.users.length > 0;
+
   return (
-    <main className="flex-grow justify-center flex flex-col">
-      <motion.div
-        layout
-        className="flex flex-col justify-center relative"
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      >
-        <Form onChange={(e) => submit(e.currentTarget)}>
-          <Input
-            autoFocus
-            startIcon={Search}
-            name="q"
-            defaultValue={query}
-            placeholder="Search for a user"
-            aria-label="Search users"
-          />
-        </Form>
+    <div className="w-full max-w-xl relative flex flex-col items-center">
+      <Form onChange={(e) => submit(e.currentTarget)} className="w-full">
+        <Input
+          autoFocus
+          startIcon={Search}
+          name="q"
+          defaultValue={query}
+          placeholder="Search for a user"
+          aria-label="Search users"
+          className="w-full"
+        />
+      </Form>
 
-        <AnimatePresence>
-          {!isLoading && loaderData?.users && loaderData.users.length > 0 && (
-            <motion.ul
-              key="results"
-              variants={{
-                visible: {
-                  transition: { staggerChildren: 0.05 },
-                },
-                hidden: {},
-              }}
-              initial="hidden"
-              animate="visible"
-              className="space-y-4 max-h-96 overflow-y-scroll absolute top-10
-    [&::-webkit-scrollbar]:w-2
-    [&::-webkit-scrollbar-track]:rounded-full
-    [&::-webkit-scrollbar-track]:bg-gray-100
-    [&::-webkit-scrollbar-thumb]:rounded-full
-    [&::-webkit-scrollbar-thumb]:bg-gray-300
-    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
-  "
-              aria-label="Search results"
-            >
-              {loaderData?.users?.map((user) => (
-                <motion.li
-                  key={user.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 10 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  className="border-b items-center text-sm grid grid-cols-3 p-2 mb-0"
-                >
-                  <div className="font-medium">
-                    {user.firstName} {user.lastName}
-                  </div>
-                  <div className="text-sm text-gray-400 truncate">
-                    {user.email}
-                  </div>
-                  <div className="text-xs text-right">{user.company.title}</div>
-                </motion.li>
-              ))}
-            </motion.ul>
+      {hasStatus && (
+        <motion.div
+          key="status"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute left-0 top-full mt-2 w-full text-center text-gray-400 text-sm z-10"
+        >
+          {!isLoading && query && loaderData?.users?.length === 0 && (
+            <p>
+              No results found for "<span className="font-medium">{query}</span>
+              "
+            </p>
           )}
+          {isLoading && (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+              <p>Searching…</p>
+            </div>
+          )}
+          {!isLoading && loaderData?.error && (
+            <p className="text-red-400">Error: {loaderData.error}</p>
+          )}
+        </motion.div>
+      )}
 
-          <motion.div
-            key="status"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute top-20 text-center w-full text-gray-400 text-sm"
+      <AnimatePresence>
+        {hasResults && (
+          <motion.ul
+            key="results"
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.05 },
+              },
+              hidden: {},
+            }}
+            initial="hidden"
+            animate="visible"
+            className="space-y-4 max-h-[50vh] overflow-y-scroll w-full absolute left-0 top-full mt-2 z-10
+							[&::-webkit-scrollbar]:w-2
+							[&::-webkit-scrollbar-track]:rounded-full
+							[&::-webkit-scrollbar-track]:bg-gray-100
+							[&::-webkit-scrollbar-thumb]:rounded-full
+							[&::-webkit-scrollbar-thumb]:bg-gray-300
+							dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+							dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+            aria-label="Search results"
           >
-            {!isLoading && query && loaderData?.users?.length === 0 && (
-              <p>
-                No results found for "
-                <span className="font-medium">{query}</span>"
-              </p>
-            )}
-            {isLoading && (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
-                <p>Searching…</p>
-              </div>
-            )}
-            {!isLoading && loaderData?.error && (
-              <p className="text-red-400">Error: {loaderData.error}</p>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-    </main>
+            {loaderData?.users?.map((user) => (
+              <motion.li
+                key={user.id}
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                className="border-b items-center text-sm grid grid-cols-3 p-2 mb-0"
+              >
+                <div className="font-medium">
+                  {user.firstName} {user.lastName}
+                </div>
+                <div className="text-sm text-gray-400 truncate">
+                  {user.email}
+                </div>
+                <div className="text-xs text-right">{user.company.title}</div>
+              </motion.li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
